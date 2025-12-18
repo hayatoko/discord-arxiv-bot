@@ -12,10 +12,10 @@ client_genai = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def search_papers():
     # search for papers submitted yesterday
-    yesterday = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=1)
+    yesterday = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
     search_start = yesterday.strftime("%Y%m%d%H%M")
     search_end = (yesterday + datetime.timedelta(days=1)).strftime("%Y%m%d%H%M")
-    print(f"Searching papers from {search_end} to {search_start}...")
+    print(f"Searching papers from {search_start} to {search_end}...")
 
     # 検索条件を指定する。
     # query: 検索キーワードなどを指定する。
@@ -220,8 +220,14 @@ def summarize_paper_sequential(papers_info:List[arxiv.Result]):
     return summaries
 
 def main():
-    discord_webhook_url = os.getenv("ARXIV_SUMMARIZER_URL")
+    discord_webhook_url = os.getenv("ARXIV_SUMMARIZER_WEBHOOK_URL")
     search_results = list(search_papers())
+    
+    if len(search_results) == 0:
+        print("No papers found, exiting.")
+        exit(0)
+
+    print(f"{len(search_results)} papers found in total.")
     interests = check_interest(search_results)
     # interests = check_interest_sequential(search_results)
     # interests = [True, False, True, True, False]  # テスト用ダミーデータ
