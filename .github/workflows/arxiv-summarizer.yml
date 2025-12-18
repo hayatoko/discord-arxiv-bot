@@ -1,0 +1,34 @@
+# This is a basic workflow to help you get started with Actions
+
+name: arXiv Summarizer
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  schedule:
+    - cron: '0 0 * * *' # 日本時間9時に実行
+  workflow_dispatch: # 手動実行も可能
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  run_script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10.5'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python install -r requirements.txt
+
+      - name: Run script
+        env:
+          GEMINI_API_KEY: ${{  secrets.GEMINI_API_KEY  }}
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+        run: python src/main.py
