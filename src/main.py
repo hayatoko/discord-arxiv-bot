@@ -8,7 +8,7 @@ import requests, json
 
 # set up clients for arXiv, GenAI, and Discord
 client_arxiv = arxiv.Client()
-client_genai = genai.Client(api_key="AIzaSyDbGSbGq7Tz2YD1wukiDv4RBnTEjgj9Jmg")# os.getenv("GEMINI_API_KEY"))
+client_genai = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def search_papers():
     # search for papers submitted yesterday
@@ -220,7 +220,7 @@ def summarize_paper_sequential(papers_info:List[arxiv.Result]):
     return summaries
 
 def main():
-    discord_webhook_url = r"https://discord.com/api/webhooks/1451243377633923218/AydW3YayUeNn71DaMHyoIjh-s9mYTIj9G2Hkrvl0WshlZh7edcWfhySHtfw9-g5xNowe" # os.getenv("ARXIV_SUMMARIZER_URL")
+    discord_webhook_url = os.getenv("ARXIV_SUMMARIZER_URL")
     search_results = list(search_papers())
     interests = check_interest(search_results)
     # interests = check_interest_sequential(search_results)
