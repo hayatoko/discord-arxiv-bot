@@ -13,7 +13,7 @@ client_discord = discord.Client(intents=discord.Intents.default())
 
 def search_papers():
     # search for papers submitted yesterday
-    yesterday = datetime.date.today() - datetime.timedelta(days=1)
+    yesterday = datetime.date.today() - datetime.timedelta(days=2) # arXiv のデータベースの反映の問題で2日の冗長性を持たせる
     search_start = yesterday.strftime("%Y%m%d0000")
     search_end = yesterday.strftime("%Y%m%d2359")
 
@@ -188,7 +188,10 @@ async def on_ready():
     results = list(filter(lambda x: interests.pop(0), results))
     summaries = await summarize_paper(results)
     # Discord に送信する
-    if len(summaries) > 0:
+    if len(results) == 0:
+        print("No interesting papers found, exiting.")
+        exit(0)
+    else:
         await channel.send(f"新しい論文が見つかったぞ。目は通せよ（{len(summaries)}件）")
 
     embeds = []
