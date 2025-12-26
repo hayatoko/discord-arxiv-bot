@@ -13,8 +13,8 @@ client_genai = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 def search_papers():
     # search for papers submitted yesterday
     yesterday = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
-    search_start = yesterday.strftime("%Y%m%d%H%M")
-    search_end = (yesterday + datetime.timedelta(days=1)).strftime("%Y%m%d%H%M")
+    search_start = yesterday.strftime("%Y%m%d%0000")
+    search_end = (yesterday + datetime.timedelta(days=1)).strftime("%Y%m%d0000")
     print(f"Searching papers from {search_start} to {search_end}...")
 
     # 検索条件を指定する。
@@ -146,6 +146,7 @@ def check_interest_sequential(papers_info:arxiv.Generator[arxiv.Result, None, No
         is_interest = InterestCheck.model_validate_json(response.text)
         interest_check.append(is_interest.interested_in)
         print(f"Result for paper {i+1}: Interested: {is_interest.interested_in}")
+        time.sleep(30.0)
     return interest_check
 
 def summarize_paper(papers_info:List[arxiv.Result]):
@@ -217,6 +218,7 @@ def summarize_paper_sequential(papers_info:List[arxiv.Result]):
         summary = Summary.model_validate_json(response.text)
         summaries.append(summary)
         print(f"Result for paper {i+1}: Title: {summary.title}")
+        time.sleep(30.0)
     return summaries
 
 def main():
