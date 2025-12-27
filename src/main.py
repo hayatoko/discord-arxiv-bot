@@ -23,8 +23,8 @@ def search_papers():
     # sort_by: 論文の並び替え条件を指定する。ここでは投稿日時の降順（最新順）。
     # cat:math.DS+cat:math.CO+cat:math.GR+cat:cs.LO+cat:cs.FL+cat:cs.DM
     search = arxiv.Search(
-        query = f"(cat:math.DS OR cat:math.CO OR cat:math.GR OR cat:cs.LO OR cat:cs.FL OR cat:cs.DM) AND submittedDate:[{search_start} TO {search_end}]",
-        max_results = None,
+        query = f"(cat:math.AG OR math.CO) AND submittedDate:[{search_start} TO {search_end}]",
+        max_results = 20,
         sort_by = arxiv.SortCriterion.SubmittedDate
     )
 
@@ -146,6 +146,7 @@ def check_interest_sequential(papers_info:arxiv.Generator[arxiv.Result, None, No
         is_interest = InterestCheck.model_validate_json(response.text)
         interest_check.append(is_interest.interested_in)
         print(f"Result for paper {i+1}: Interested: {is_interest.interested_in}")
+        time.sleep(30.0)
     return interest_check
 
 def summarize_paper(papers_info:List[arxiv.Result]):
@@ -217,6 +218,7 @@ def summarize_paper_sequential(papers_info:List[arxiv.Result]):
         summary = Summary.model_validate_json(response.text)
         summaries.append(summary)
         print(f"Result for paper {i+1}: Title: {summary.title}")
+        time.sleep(30.0)
     return summaries
 
 def main():
@@ -228,8 +230,8 @@ def main():
         exit(0)
 
     print(f"{len(search_results)} papers found in total.")
-    interests = check_interest(search_results)
-    # interests = check_interest_sequential(search_results)
+    # interests = check_interest(search_results)
+    interests = check_interest_sequential(search_results)
     # interests = [True, False, True, True, False]  # テスト用ダミーデータ
     # interested な論文だけを抽出する
     results = list(filter(lambda x: interests.pop(0), search_results))
@@ -239,8 +241,8 @@ def main():
         print("No interesting papers found, exiting.")
         exit(0)
 
-    summaries = summarize_paper(results)
-    # summaries = summarize_paper_sequential(results)
+    # summaries = summarize_paper(results)
+    summaries = summarize_paper_sequential(results)
     is_sending_successful = True
     message = {"content": f"新しい論文が見つかったぞ。目は通せよ（{len(results)}件）"}
     headers = {"Content-Type": "application/json"}
