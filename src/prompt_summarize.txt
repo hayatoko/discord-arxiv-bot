@@ -13,4 +13,4 @@
         - 例 : $\aut{H_n(X; \mathbb{Z})}$ -> Aut(Hₙ(X; ℤ))
 
 ## 興味ある分野
-toric variety, algebraic geometry, riemann roch, 
+toric variety, algebraic geometry, riemann roch, algebraic k theory, ehrhart theory, algebraic cycle
