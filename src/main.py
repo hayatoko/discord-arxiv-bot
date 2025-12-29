@@ -13,8 +13,8 @@ client_genai = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 def search_papers():
     # search for papers submitted yesterday
     yesterday = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(days=2)
-    search_start = yesterday.strftime("%Y%m%d000000")
-    search_end = (yesterday + datetime.timedelta(days=1)).strftime("%Y%m%d235959")
+    search_start = yesterday.strftime("%Y%m%d0000")
+    search_end = yesterday.strftime("%Y%m%d2359")
     print(f"Searching papers from {search_start} to {search_end}...")
 
     # 検索条件を指定する。
